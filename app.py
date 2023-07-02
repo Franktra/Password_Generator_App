@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import string
 
+
 def generate_password(length, include_uppercase, include_lowercase, include_numbers, include_special_chars):
     characters = ""
     if include_uppercase:
