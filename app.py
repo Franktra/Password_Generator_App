@@ -1,31 +1,37 @@
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 import streamlit as st
+import random
+import string
 
-# Create a ChatBot instance
-chatbot = ChatBot('MyChatBot')
+def generate_password(length, include_uppercase, include_lowercase, include_numbers, include_special_chars):
+    characters = ""
+    if include_uppercase:
+        characters += string.ascii_uppercase
+    if include_lowercase:
+        characters += string.ascii_lowercase
+    if include_numbers:
+        characters += string.digits
+    if include_special_chars:
+        characters += string.punctuation
 
-# Create a new trainer for the chatbot
-trainer = ChatterBotCorpusTrainer(chatbot)
+    if characters == "":
+        st.write("Please select at least one character type.")
+        return ""
 
-# Train the chatbot based on the English corpus
-trainer.train('chatterbot.corpus.english')
-
-def get_response(user_input):
-    # Get a response from the chatbot based on user input
-    response = chatbot.get_response(user_input)
-    return str(response)
+    password = "".join(random.choice(characters) for _ in range(length))
+    return password
 
 def main():
-    st.title("ChatterBot")
-    st.write("Welcome! Start chatting with the chatbot.")
+    st.title("Password Generator")
 
-    user_input = st.text_input("User Input:")
-    submit_button = st.button("Submit")
+    length = st.slider("Password Length", min_value=6, max_value=20, value=10, step=1)
+    include_uppercase = st.checkbox("Include Uppercase Letters")
+    include_lowercase = st.checkbox("Include Lowercase Letters")
+    include_numbers = st.checkbox("Include Numbers")
+    include_special_chars = st.checkbox("Include Special Characters")
 
-    if submit_button:
-        bot_response = get_response(user_input)
-        st.write("Bot Response:", bot_response)
+    if st.button("Generate Password"):
+        password = generate_password(length, include_uppercase, include_lowercase, include_numbers, include_special_chars)
+        st.write("Generated Password:", password)
 
 if __name__ == "__main__":
     main()
